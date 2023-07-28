@@ -1,4 +1,4 @@
-import { Body, Controller, Post } from '@nestjs/common';
+import { Body, Controller, Get, Post } from '@nestjs/common';
 import { ArtistService } from './artist.service';
 
 @Controller('artist')
@@ -15,5 +15,10 @@ export class ArtistController {
       hasGrammy,
     );
     return { id: newArtistId };
+  }
+
+  @Get()
+  getArtists() {
+    return this.artistService.getArtists();
   }
 }

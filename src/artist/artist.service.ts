@@ -4,12 +4,16 @@ import { v4 } from 'uuid';
 
 @Injectable()
 export class ArtistService {
-  artists: Artist[] = [];
+  private artists: Artist[] = [];
 
   createNewArtist(name: string, grammy: boolean) {
     const artiststId = v4();
     const newArtist = new Artist(artiststId, name, grammy);
     this.artists.push(newArtist);
     return artiststId;
+  }
+
+  getArtists() {
+    return [...this.artists];
   }
 }
