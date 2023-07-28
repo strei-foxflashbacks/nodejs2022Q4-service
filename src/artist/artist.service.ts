@@ -22,6 +22,9 @@ export class ArtistService {
   }
 
   createNewArtist(name: string, grammy: boolean) {
+    if (name === undefined || grammy === undefined) {
+      throw new BadRequestException('Artist is missing required fields');
+    }
     const artiststId = v4();
     const newArtist = new Artist(artiststId, name, grammy);
     this.artists.push(newArtist);
