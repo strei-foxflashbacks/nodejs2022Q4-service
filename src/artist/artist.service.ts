@@ -1,6 +1,11 @@
-import { Injectable } from '@nestjs/common';
+import {
+  BadRequestException,
+  Injectable,
+  NotFoundException,
+} from '@nestjs/common';
 import { Artist } from './artist.model';
 import { v4 } from 'uuid';
+import { isUUID } from 'class-validator';
 
 @Injectable()
 export class ArtistService {
@@ -15,5 +20,16 @@ export class ArtistService {
 
   getArtists() {
     return [...this.artists];
+  }
+
+  getArtistById(id: string) {
+    if (!isUUID(id)) {
+      throw new BadRequestException('Artist id is invalid (or not UUID)');
+    }
+    const artist = this.artists.find((record) => record.id === id);
+    if (!artist) {
+      throw new NotFoundException('Artist not found');
+    }
+    return { ...artist };
   }
 }
