@@ -10,7 +10,7 @@ export class ArtistService {
     const artiststId = v4();
     const newArtist = new Artist(artiststId, name, grammy);
     this.artists.push(newArtist);
-    return artiststId;
+    return newArtist;
   }
 
   getArtists() {

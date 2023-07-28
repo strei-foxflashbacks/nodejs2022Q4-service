@@ -10,11 +10,8 @@ export class ArtistController {
     @Body('name') artistName: string,
     @Body('grammy') hasGrammy: boolean,
   ) {
-    const newArtistId = this.artistService.createNewArtist(
-      artistName,
-      hasGrammy,
-    );
-    return { id: newArtistId };
+    const newArtist = this.artistService.createNewArtist(artistName, hasGrammy);
+    return newArtist;
   }
 
   @Get()
