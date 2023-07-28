@@ -1,4 +1,12 @@
-import { Body, Controller, Get, Param, Post, Put } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  Get,
+  Param,
+  Post,
+  Put,
+  Delete,
+} from '@nestjs/common';
 import { ArtistService } from './artist.service';
 
 @Controller('artist')
@@ -31,5 +39,11 @@ export class ArtistController {
     @Body('grammy') hasGrammy: boolean,
   ) {
     return this.artistService.updateArtistById(artistId, artistName, hasGrammy);
+  }
+
+  @Delete(':id')
+  deleteTheArtist(@Param('id') artistId: string) {
+    this.artistService.deleteArtistById(artistId);
+    return null;
   }
 }

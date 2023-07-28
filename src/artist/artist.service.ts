@@ -50,4 +50,10 @@ export class ArtistService {
     this.artists[index] = updatedArtist;
     return updatedArtist;
   }
+
+  deleteArtistById(id: string) {
+    this.findArtist(id);
+    const index = this.artists.findIndex((record) => record.id === id);
+    this.artists.splice(index, 1);
+  }
 }
