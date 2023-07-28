@@ -10,6 +10,16 @@ import { isUUID } from 'class-validator';
 @Injectable()
 export class ArtistService {
   private artists: Artist[] = [];
+  private findArtist(artistId: string) {
+    if (!isUUID(artistId)) {
+      throw new BadRequestException('Artist id is invalid (or not UUID)');
+    }
+    const artist = this.artists.find((record) => record.id === artistId);
+    if (!artist) {
+      throw new NotFoundException('Artist not found');
+    }
+    return artist;
+  }
 
   createNewArtist(name: string, grammy: boolean) {
     const artiststId = v4();
@@ -23,13 +33,21 @@ export class ArtistService {
   }
 
   getArtistById(id: string) {
-    if (!isUUID(id)) {
-      throw new BadRequestException('Artist id is invalid (or not UUID)');
-    }
-    const artist = this.artists.find((record) => record.id === id);
-    if (!artist) {
-      throw new NotFoundException('Artist not found');
-    }
+    const artist = this.findArtist(id);
     return { ...artist };
+  }
+
+  updateArtistById(id: string, name: string, grammy: boolean) {
+    const artist = this.findArtist(id);
+    const index = this.artists.findIndex((record) => record.id === id);
+    const updatedArtist = { ...artist };
+    if (name) {
+      updatedArtist.name = name;
+    }
+    if (grammy) {
+      updatedArtist.grammy = grammy;
+    }
+    this.artists[index] = updatedArtist;
+    return updatedArtist;
   }
 }
