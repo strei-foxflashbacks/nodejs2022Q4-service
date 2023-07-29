@@ -1,6 +1,7 @@
 import { Injectable, BadRequestException } from '@nestjs/common';
 import { Album } from './album.model';
 import { v4 } from 'uuid';
+import recordFinder from 'src/utils/recordFinder';
 
 @Injectable()
 export class AlbumService {
@@ -18,5 +19,10 @@ export class AlbumService {
 
   getAlbums() {
     return [...this.albums];
+  }
+
+  getAlbumByID(id: string) {
+    const album = recordFinder('Album', id, this.albums);
+    return { ...album };
   }
 }

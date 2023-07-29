@@ -1,25 +1,11 @@
-import {
-  BadRequestException,
-  Injectable,
-  NotFoundException,
-} from '@nestjs/common';
+import { BadRequestException, Injectable } from '@nestjs/common';
 import { Artist } from './artist.model';
 import { v4 } from 'uuid';
-import { isUUID } from 'class-validator';
+import recordFinder from 'src/utils/recordFinder';
 
 @Injectable()
 export class ArtistService {
   private artists: Artist[] = [];
-  private findArtist(artistId: string) {
-    if (!isUUID(artistId)) {
-      throw new BadRequestException('Artist id is invalid (or not UUID)');
-    }
-    const artist = this.artists.find((record) => record.id === artistId);
-    if (!artist) {
-      throw new NotFoundException('Artist not found');
-    }
-    return artist;
-  }
 
   createNewArtist(name: string, grammy: boolean) {
     if (name === undefined || grammy === undefined) {
@@ -36,12 +22,12 @@ export class ArtistService {
   }
 
   getArtistById(id: string) {
-    const artist = this.findArtist(id);
+    const artist = recordFinder('Artist', id, this.artists);
     return { ...artist };
   }
 
   updateArtistById(id: string, name: string, grammy: boolean) {
-    const artist = this.findArtist(id);
+    const artist = recordFinder('Artist', id, this.artists) as Artist;
     const index = this.artists.findIndex((record) => record.id === id);
     const updatedArtist = { ...artist };
     if (name) {
@@ -55,12 +41,12 @@ export class ArtistService {
   }
 
   deleteArtistById(id: string) {
-    this.findArtist(id);
+    recordFinder('Artist', id, this.artists);
     const index = this.artists.findIndex((record) => record.id === id);
     this.artists.splice(index, 1);
   }
 
-  validateArtistID(id) {
-    this.findArtist(id);
+  validateArtistID(id: string) {
+    recordFinder('Artist', id, this.artists);
   }
 }
