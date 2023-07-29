@@ -53,4 +53,8 @@ export class AlbumService {
     const index = this.albums.findIndex((record) => record.id === id);
     this.albums.splice(index, 1);
   }
+
+  validateAlbumID(id: string) {
+    recordFinder('Album', id, this.albums);
+  }
 }
