@@ -25,4 +25,26 @@ export class AlbumService {
     const album = recordFinder('Album', id, this.albums);
     return { ...album };
   }
+
+  updateAlbumById(
+    id: string,
+    name: string,
+    year: number,
+    artistId: string | null,
+  ) {
+    const album = recordFinder('Album', id, this.albums) as Album;
+    const index = this.albums.findIndex((record) => record.id === id);
+    const updatedAlbum = { ...album };
+    if (name) {
+      updatedAlbum.name = name;
+    }
+    if (year) {
+      updatedAlbum.year = year;
+    }
+    if (artistId) {
+      updatedAlbum.artistId = artistId;
+    }
+    this.albums[index] = updatedAlbum;
+    return updatedAlbum;
+  }
 }

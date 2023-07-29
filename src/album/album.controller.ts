@@ -1,4 +1,4 @@
-import { Body, Controller, Get, Param, Post } from '@nestjs/common';
+import { Body, Controller, Get, Param, Post, Put } from '@nestjs/common';
 import { AlbumService } from './album.service';
 import { ArtistService } from 'src/artist/artist.service';
 
@@ -34,5 +34,23 @@ export class AlbumController {
   @Get(':id')
   getAlbum(@Param('id') albumId: string) {
     return this.albumService.getAlbumByID(albumId);
+  }
+
+  @Put(':id')
+  updateTheAlbum(
+    @Param('id') albumId: string,
+    @Body('name') albumName: string,
+    @Body('year') releaseYear: number,
+    @Body('artistId') artistId: string | null,
+  ) {
+    if (artistId !== undefined && artistId !== null) {
+      this.artistService.validateArtistID(artistId);
+    }
+    return this.albumService.updateAlbumById(
+      albumId,
+      albumName,
+      releaseYear,
+      artistId,
+    );
   }
 }
