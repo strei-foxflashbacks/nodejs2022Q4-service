@@ -59,4 +59,8 @@ export class ArtistService {
     const index = this.artists.findIndex((record) => record.id === id);
     this.artists.splice(index, 1);
   }
+
+  validateArtistID(id) {
+    this.findArtist(id);
+  }
 }
