@@ -47,4 +47,10 @@ export class AlbumService {
     this.albums[index] = updatedAlbum;
     return updatedAlbum;
   }
+
+  deleteAlbumById(id: string) {
+    recordFinder('Album', id, this.albums);
+    const index = this.albums.findIndex((record) => record.id === id);
+    this.albums.splice(index, 1);
+  }
 }
