@@ -1,4 +1,4 @@
-import { Body, Controller, Post } from '@nestjs/common';
+import { Body, Controller, Get, Post } from '@nestjs/common';
 import { AlbumService } from './album.service';
 import { ArtistService } from 'src/artist/artist.service';
 
@@ -24,5 +24,10 @@ export class AlbumController {
       artistId,
     );
     return newAlbum;
+  }
+
+  @Get()
+  getAlbums() {
+    return this.albumService.getAlbums();
   }
 }

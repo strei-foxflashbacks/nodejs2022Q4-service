@@ -15,4 +15,8 @@ export class AlbumService {
     this.albums.push(newAlbum);
     return newAlbum;
   }
+
+  getAlbums() {
+    return [...this.albums];
+  }
 }
