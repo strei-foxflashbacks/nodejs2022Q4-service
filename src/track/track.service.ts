@@ -74,4 +74,8 @@ export class TrackService {
     const index = this.tracks.findIndex((record) => record.id === id);
     this.tracks.splice(index, 1);
   }
+
+  validateTrackId(id: string) {
+    recordFinder('Track', id, this.tracks);
+  }
 }
