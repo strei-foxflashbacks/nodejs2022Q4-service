@@ -30,4 +30,8 @@ export class TrackService {
     this.tracks.push(newTrack);
     return newTrack;
   }
+
+  getTracks() {
+    return [...this.tracks];
+  }
 }

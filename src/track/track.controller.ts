@@ -1,4 +1,4 @@
-import { Body, Controller, Post } from '@nestjs/common';
+import { Body, Controller, Get, Post } from '@nestjs/common';
 import { TrackService } from './track.service';
 import { ArtistService } from 'src/artist/artist.service';
 import { AlbumService } from 'src/album/album.service';
@@ -31,5 +31,10 @@ export class TrackController {
       duration,
     );
     return newTrack;
+  }
+
+  @Get()
+  getTracks() {
+    return this.trackService.getTracks();
   }
 }
