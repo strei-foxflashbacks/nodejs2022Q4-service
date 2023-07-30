@@ -1,6 +1,7 @@
 import { Injectable, BadRequestException } from '@nestjs/common';
 import { Track } from './track.model';
 import { v4 } from 'uuid';
+import isInteger from 'src/utils/isInteger';
 // import recordFinder from 'src/utils/recordFinder';
 
 @Injectable()
@@ -20,6 +21,9 @@ export class TrackService {
       duration === undefined
     ) {
       throw new BadRequestException('Track is missing required fields');
+    }
+    if (!isInteger(duration)) {
+      throw new BadRequestException('Duration should be an integer');
     }
     const trackId = v4();
     const newTrack = new Track(trackId, name, artistId, albumId, duration);
