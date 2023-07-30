@@ -1,4 +1,4 @@
-import { Body, Controller, Get, Post } from '@nestjs/common';
+import { Body, Controller, Get, Param, Post } from '@nestjs/common';
 import { TrackService } from './track.service';
 import { ArtistService } from 'src/artist/artist.service';
 import { AlbumService } from 'src/album/album.service';
@@ -36,5 +36,10 @@ export class TrackController {
   @Get()
   getTracks() {
     return this.trackService.getTracks();
+  }
+
+  @Get(':id')
+  getTrack(@Param('id') trackId: string) {
+    return this.trackService.getTrackById(trackId);
   }
 }

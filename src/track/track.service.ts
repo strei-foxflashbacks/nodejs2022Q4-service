@@ -2,7 +2,7 @@ import { Injectable, BadRequestException } from '@nestjs/common';
 import { Track } from './track.model';
 import { v4 } from 'uuid';
 import isInteger from 'src/utils/isInteger';
-// import recordFinder from 'src/utils/recordFinder';
+import recordFinder from 'src/utils/recordFinder';
 
 @Injectable()
 export class TrackService {
@@ -33,5 +33,10 @@ export class TrackService {
 
   getTracks() {
     return [...this.tracks];
+  }
+
+  getTrackById(id: string) {
+    const track = recordFinder('Track', id, this.tracks);
+    return { ...track };
   }
 }
