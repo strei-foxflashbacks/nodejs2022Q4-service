@@ -39,4 +39,33 @@ export class TrackService {
     const track = recordFinder('Track', id, this.tracks);
     return { ...track };
   }
+
+  updateTrackById(
+    id: string,
+    name: string,
+    artistId: string | null,
+    albumId: string | null,
+    duration: number,
+  ) {
+    if (!isInteger(duration)) {
+      throw new BadRequestException('Duration should be an integer');
+    }
+    const track = recordFinder('Track', id, this.tracks) as Track;
+    const index = this.tracks.findIndex((record) => record.id === id);
+    const updatedTrack = { ...track };
+    if (name) {
+      updatedTrack.name = name;
+    }
+    if (artistId) {
+      updatedTrack.artistId = artistId;
+    }
+    if (albumId) {
+      updatedTrack.albumId = albumId;
+    }
+    if (duration) {
+      updatedTrack.duration = duration;
+    }
+    this.tracks[index] = updatedTrack;
+    return updatedTrack;
+  }
 }
