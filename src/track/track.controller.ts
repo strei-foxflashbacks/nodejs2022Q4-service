@@ -1,4 +1,12 @@
-import { Body, Controller, Get, Param, Post, Put } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  Delete,
+  Get,
+  Param,
+  Post,
+  Put,
+} from '@nestjs/common';
 import { TrackService } from './track.service';
 import { ArtistService } from 'src/artist/artist.service';
 import { AlbumService } from 'src/album/album.service';
@@ -64,5 +72,11 @@ export class TrackController {
       albumId,
       duration,
     );
+  }
+
+  @Delete(':id')
+  deleteTheTrack(@Param('id') trackId: string) {
+    this.trackService.deleteTrackById(trackId);
+    return null;
   }
 }

@@ -68,4 +68,10 @@ export class TrackService {
     this.tracks[index] = updatedTrack;
     return updatedTrack;
   }
+
+  deleteTrackById(id: string) {
+    recordFinder('Track', id, this.tracks) as Track;
+    const index = this.tracks.findIndex((record) => record.id === id);
+    this.tracks.splice(index, 1);
+  }
 }
