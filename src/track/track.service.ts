@@ -1,4 +1,29 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, BadRequestException } from '@nestjs/common';
+import { Track } from './track.model';
+import { v4 } from 'uuid';
+// import recordFinder from 'src/utils/recordFinder';
 
 @Injectable()
-export class TrackService {}
+export class TrackService {
+  private tracks: Track[] = [];
+
+  createNewTrack(
+    name: string,
+    artistId: string | null,
+    albumId: string | null,
+    duration: number,
+  ) {
+    if (
+      name === undefined ||
+      artistId === undefined ||
+      albumId === undefined ||
+      duration === undefined
+    ) {
+      throw new BadRequestException('Track is missing required fields');
+    }
+    const trackId = v4();
+    const newTrack = new Track(trackId, name, artistId, albumId, duration);
+    this.tracks.push(newTrack);
+    return newTrack;
+  }
+}

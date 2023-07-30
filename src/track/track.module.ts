@@ -6,6 +6,6 @@ import { ArtistService } from 'src/artist/artist.service';
 
 @Module({
   controllers: [TrackController],
-  providers: [TrackService, AlbumService, ArtistService],
+  providers: [TrackService, ArtistService, AlbumService],
 })
 export class TrackModule {}
