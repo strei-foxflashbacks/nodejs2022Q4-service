@@ -10,12 +10,16 @@ import {
 } from '@nestjs/common';
 import { AlbumService } from './album.service';
 import { ArtistService } from 'src/artist/artist.service';
+import { FavsService } from 'src/favs/favs.service';
+import { TrackService } from 'src/track/track.service';
 
 @Controller('album')
 export class AlbumController {
   constructor(
     private readonly albumService: AlbumService,
     private readonly artistService: ArtistService,
+    private readonly trackService: TrackService,
+    private readonly favsService: FavsService,
   ) {}
 
   @Post()
@@ -67,6 +71,11 @@ export class AlbumController {
   @HttpCode(204)
   deleteTheAlbum(@Param('id') albumId: string) {
     this.albumService.deleteAlbumById(albumId);
-    return null;
+    this.trackService.albumDeleted(albumId);
+    try {
+      this.favsService.deleteAlbumFromFavorites(albumId);
+    } catch {
+      return null;
+    }
   }
 }

@@ -78,4 +78,20 @@ export class TrackService {
   validateTrackId(id: string) {
     recordFinder('Track', id, this.tracks);
   }
+
+  artistDeleted(artistId: string) {
+    this.tracks.forEach((track) => {
+      if (track.artistId === artistId) {
+        track.artistId = null;
+      }
+    });
+  }
+
+  albumDeleted(albumId: string) {
+    this.tracks.forEach((track) => {
+      if (track.albumId === albumId) {
+        track.albumId = null;
+      }
+    });
+  }
 }

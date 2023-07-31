@@ -11,6 +11,7 @@ import {
 import { TrackService } from './track.service';
 import { ArtistService } from 'src/artist/artist.service';
 import { AlbumService } from 'src/album/album.service';
+import { FavsService } from 'src/favs/favs.service';
 
 @Controller('track')
 export class TrackController {
@@ -18,6 +19,7 @@ export class TrackController {
     private readonly trackService: TrackService,
     private readonly artistService: ArtistService,
     private readonly albumService: AlbumService,
+    private readonly favsService: FavsService,
   ) {}
 
   @Post()
@@ -79,6 +81,10 @@ export class TrackController {
   @HttpCode(204)
   deleteTheTrack(@Param('id') trackId: string) {
     this.trackService.deleteTrackById(trackId);
-    return null;
+    try {
+      this.favsService.deleteTrackFromFavorites(trackId);
+    } catch {
+      return null;
+    }
   }
 }

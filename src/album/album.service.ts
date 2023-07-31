@@ -28,9 +28,9 @@ export class AlbumService {
 
   updateAlbumById(
     id: string,
-    name: string,
-    year: number,
-    artistId: string | null,
+    name?: string,
+    year?: number,
+    artistId?: string | null,
   ) {
     const album = recordFinder('Album', id, this.albums) as Album;
     const index = this.albums.findIndex((record) => record.id === id);
@@ -56,5 +56,13 @@ export class AlbumService {
 
   validateAlbumID(id: string) {
     recordFinder('Album', id, this.albums);
+  }
+
+  artistDeleted(artistId: string) {
+    this.albums.forEach((album) => {
+      if (album.artistId === artistId) {
+        album.artistId = null;
+      }
+    });
   }
 }
