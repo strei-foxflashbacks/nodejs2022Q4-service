@@ -8,7 +8,12 @@ export class ArtistService {
   private artists: Artist[] = [];
 
   createNewArtist(name: string, grammy: boolean) {
-    if (name === undefined || grammy === undefined) {
+    if (
+      name === undefined ||
+      grammy === undefined ||
+      typeof name !== 'string' ||
+      typeof grammy !== 'boolean'
+    ) {
       throw new BadRequestException('Artist is missing required fields');
     }
     const artiststId = v4();

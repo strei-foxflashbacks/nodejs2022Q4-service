@@ -8,7 +8,13 @@ export class AlbumService {
   private albums: Album[] = [];
 
   createNewAlbum(name: string, year: number, artistId: string | null) {
-    if (name === undefined || year === undefined || artistId === undefined) {
+    if (
+      name === undefined ||
+      year === undefined ||
+      artistId === undefined ||
+      typeof name !== 'string' ||
+      typeof year !== 'number'
+    ) {
       throw new BadRequestException('Album is missing required fields');
     }
     const albumId = v4();

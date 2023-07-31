@@ -18,7 +18,9 @@ export class TrackService {
       name === undefined ||
       artistId === undefined ||
       albumId === undefined ||
-      duration === undefined
+      duration === undefined ||
+      typeof name !== 'string' ||
+      typeof duration !== 'number'
     ) {
       throw new BadRequestException('Track is missing required fields');
     }
