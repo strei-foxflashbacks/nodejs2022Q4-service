@@ -9,7 +9,7 @@ export class UserService {
 
   private excludePassword(user: User) {
     return Object.fromEntries(
-      Object.entries(user).filter((key) => key[0] != 'password'),
+      Object.entries(user).filter((key) => key[0] !== 'password'),
     );
   }
 
