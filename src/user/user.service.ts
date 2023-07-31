@@ -63,4 +63,10 @@ export class UserService {
     const output = this.excludePassword(user);
     return output;
   }
+
+  deleteUser(id: string) {
+    recordFinder('User', id, this.users) as User;
+    const index = this.users.findIndex((record) => record.id === id);
+    this.users.splice(index, 1);
+  }
 }
