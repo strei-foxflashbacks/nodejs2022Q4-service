@@ -32,4 +32,9 @@ export class UserService {
     const output = this.excludePassword(newUser);
     return output;
   }
+
+  getUsers() {
+    const output = this.users.map((user) => this.excludePassword(user));
+    return output;
+  }
 }
