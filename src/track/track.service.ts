@@ -18,11 +18,12 @@ export class TrackService {
       name === undefined ||
       artistId === undefined ||
       albumId === undefined ||
-      duration === undefined ||
-      typeof name !== 'string' ||
-      typeof duration !== 'number'
+      duration === undefined
     ) {
       throw new BadRequestException('Track is missing required fields');
+    }
+    if (typeof name !== 'string' || typeof duration !== 'number') {
+      throw new BadRequestException('Invalid input');
     }
     if (!isInteger(duration)) {
       throw new BadRequestException('Duration should be an integer');
@@ -51,6 +52,9 @@ export class TrackService {
   ) {
     if (!isInteger(duration)) {
       throw new BadRequestException('Duration should be an integer');
+    }
+    if (typeof name !== 'string' || typeof duration !== 'number') {
+      throw new BadRequestException('Invalid input');
     }
     const track = recordFinder('Track', id, this.tracks) as Track;
     const index = this.tracks.findIndex((record) => record.id === id);
