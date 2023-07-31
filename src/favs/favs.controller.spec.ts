@@ -1,5 +1,5 @@
 import { Test, TestingModule } from '@nestjs/testing';
-import { FavsController } from './favs.artist.controller';
+import { FavsController } from './favs.controller';
 
 describe('FavsController', () => {
   let controller: FavsController;
