@@ -32,6 +32,9 @@ export class ArtistService {
   }
 
   updateArtistById(id: string, name: string, grammy: boolean) {
+    if (typeof name !== 'string' || typeof grammy !== 'boolean') {
+      throw new BadRequestException('Invalid input');
+    }
     const artist = recordFinder('Artist', id, this.artists) as Artist;
     const index = this.artists.findIndex((record) => record.id === id);
     const updatedArtist = { ...artist };
