@@ -1,6 +1,7 @@
 import { BadRequestException, Injectable } from '@nestjs/common';
 import { User } from './user.model';
 import { v4 } from 'uuid';
+import recordFinder from 'src/utils/recordFinder';
 
 @Injectable()
 export class UserService {
@@ -35,6 +36,12 @@ export class UserService {
 
   getUsers() {
     const output = this.users.map((user) => this.excludePassword(user));
+    return output;
+  }
+
+  getUserById(id: string) {
+    const user = recordFinder('User', id, this.users) as User;
+    const output = this.excludePassword(user);
     return output;
   }
 }
