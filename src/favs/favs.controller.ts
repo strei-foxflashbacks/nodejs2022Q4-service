@@ -7,6 +7,7 @@ import {
   BadRequestException,
   Get,
   Delete,
+  HttpCode,
 } from '@nestjs/common';
 import { FavsService } from './favs.service';
 import { TrackService } from 'src/track/track.service';
@@ -63,6 +64,7 @@ export class FavsController {
   }
 
   @Delete('artist/:id')
+  @HttpCode(204)
   deleteArtist(@Param('id') artistId: string) {
     this.artistService.validateArtistID(artistId);
     return this.favsService.deleteArtistFromFavorites(artistId);
@@ -88,6 +90,7 @@ export class FavsController {
   }
 
   @Delete('album/:id')
+  @HttpCode(204)
   deleteAlbum(@Param('id') albumId: string) {
     this.albumService.validateAlbumID(albumId);
     return this.favsService.deleteAlbumFromFavorites(albumId);
@@ -113,6 +116,7 @@ export class FavsController {
   }
 
   @Delete('track/:id')
+  @HttpCode(204)
   deleteTrack(@Param('id') trackId: string) {
     this.trackService.validateTrackId(trackId);
     return this.favsService.deleteTrackFromFavorites(trackId);
