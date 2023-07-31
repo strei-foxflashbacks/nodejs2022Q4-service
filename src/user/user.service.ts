@@ -1,4 +1,8 @@
-import { BadRequestException, Injectable } from '@nestjs/common';
+import {
+  BadRequestException,
+  ForbiddenException,
+  Injectable,
+} from '@nestjs/common';
 import { User } from './user.model';
 import { v4 } from 'uuid';
 import recordFinder from 'src/utils/recordFinder';
@@ -41,6 +45,21 @@ export class UserService {
 
   getUserById(id: string) {
     const user = recordFinder('User', id, this.users) as User;
+    const output = this.excludePassword(user);
+    return output;
+  }
+
+  updateUser(id: string, oldPassword: string, newPassword: string) {
+    if (oldPassword === undefined || newPassword === undefined) {
+      throw new BadRequestException('User is missing required fields');
+    }
+    const user = recordFinder('User', id, this.users) as User;
+    if (oldPassword !== user.password) {
+      throw new ForbiddenException('Old password is incorrect');
+    }
+    user.password = newPassword;
+    user.version++;
+    user.updatedAt = Date.now();
     const output = this.excludePassword(user);
     return output;
   }
