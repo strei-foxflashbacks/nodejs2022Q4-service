@@ -3,6 +3,7 @@ import {
   Controller,
   Delete,
   Get,
+  HttpCode,
   Param,
   Post,
   Put,
@@ -75,6 +76,7 @@ export class TrackController {
   }
 
   @Delete(':id')
+  @HttpCode(204)
   deleteTheTrack(@Param('id') trackId: string) {
     this.trackService.deleteTrackById(trackId);
     return null;

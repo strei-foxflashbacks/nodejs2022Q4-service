@@ -6,6 +6,7 @@ import {
   Post,
   Put,
   Delete,
+  HttpCode,
 } from '@nestjs/common';
 import { AlbumService } from './album.service';
 import { ArtistService } from 'src/artist/artist.service';
@@ -63,6 +64,7 @@ export class AlbumController {
   }
 
   @Delete(':id')
+  @HttpCode(204)
   deleteTheAlbum(@Param('id') albumId: string) {
     this.albumService.deleteAlbumById(albumId);
     return null;
