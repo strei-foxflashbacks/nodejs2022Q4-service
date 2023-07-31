@@ -5,11 +5,16 @@ import {
   UnprocessableEntityException,
   NotFoundException,
   BadRequestException,
+  Get,
 } from '@nestjs/common';
 import { FavsService } from './favs.service';
 import { TrackService } from 'src/track/track.service';
 import { ArtistService } from 'src/artist/artist.service';
 import { AlbumService } from 'src/album/album.service';
+import { FavoritesResponse } from './favs.model';
+import { Artist } from 'src/artist/artist.model';
+import { Album } from 'src/album/album.model';
+import { Track } from 'src/track/track.model';
 
 @Controller('favs')
 export class FavsController {
@@ -19,6 +24,23 @@ export class FavsController {
     private readonly artistService: ArtistService,
     private readonly albumService: AlbumService,
   ) {}
+
+  @Get()
+  getFavorites() {
+    const ids = this.favsService.getFavoritesIds();
+    const response: FavoritesResponse = {
+      artists: ids.artists.map((id) =>
+        this.artistService.getArtistById(id),
+      ) as Artist[],
+      albums: ids.albums.map((id) =>
+        this.albumService.getAlbumByID(id),
+      ) as Album[],
+      tracks: ids.tracks.map((id) =>
+        this.trackService.getTrackById(id),
+      ) as Track[],
+    };
+    return response;
+  }
 
   @Post('artist/:id')
   favoriteArtist(@Param('id') artistId: string) {

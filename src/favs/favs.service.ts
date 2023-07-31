@@ -9,6 +9,10 @@ export class FavsService {
     tracks: [],
   };
 
+  getFavoritesIds() {
+    return { ...this.favorites };
+  }
+
   addArtistToFavorites(id: string) {
     this.favorites.artists.push(id);
   }
