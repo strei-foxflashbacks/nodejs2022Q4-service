@@ -18,13 +18,11 @@ export class UserService {
   }
 
   createNew(passedLogin: string, passedPassword: string) {
-    if (
-      passedLogin === undefined ||
-      passedPassword === undefined ||
-      typeof passedLogin !== 'string' ||
-      typeof passedPassword !== 'string'
-    ) {
+    if (passedLogin === undefined || passedPassword === undefined) {
       throw new BadRequestException('User is missing required fields');
+    }
+    if (typeof passedLogin !== 'string' || typeof passedPassword !== 'string') {
+      throw new BadRequestException('Invalid input');
     }
     const userId = v4();
     const version = 1;
@@ -55,13 +53,11 @@ export class UserService {
   }
 
   updateUser(id: string, oldPassword: string, newPassword: string) {
-    if (
-      oldPassword === undefined ||
-      newPassword === undefined ||
-      typeof oldPassword !== 'string' ||
-      typeof newPassword !== 'string'
-    ) {
+    if (oldPassword === undefined || newPassword === undefined) {
       throw new BadRequestException('User is missing required fields');
+    }
+    if (typeof oldPassword !== 'string' || typeof newPassword !== 'string') {
+      throw new BadRequestException('Invalid input');
     }
     const user = recordFinder('User', id, this.users) as User;
     if (oldPassword !== user.password) {
