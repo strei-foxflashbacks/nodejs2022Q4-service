@@ -38,9 +38,7 @@ export class ArtistService {
     if (name) {
       updatedArtist.name = name;
     }
-    if (grammy) {
-      updatedArtist.grammy = grammy;
-    }
+    updatedArtist.grammy = grammy;
     this.artists[index] = updatedArtist;
     return updatedArtist;
   }
