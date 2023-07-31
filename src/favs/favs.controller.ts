@@ -6,6 +6,7 @@ import {
   NotFoundException,
   BadRequestException,
   Get,
+  Delete,
 } from '@nestjs/common';
 import { FavsService } from './favs.service';
 import { TrackService } from 'src/track/track.service';
@@ -61,6 +62,12 @@ export class FavsController {
     }
   }
 
+  @Delete('artist/:id')
+  deleteArtist(@Param('id') artistId: string) {
+    this.artistService.validateArtistID(artistId);
+    return this.favsService.deleteArtistFromFavorites(artistId);
+  }
+
   @Post('album/:id')
   favoriteAlbum(@Param('id') albumId: string) {
     try {
@@ -80,6 +87,12 @@ export class FavsController {
     }
   }
 
+  @Delete('album/:id')
+  deleteAlbum(@Param('id') albumId: string) {
+    this.albumService.validateAlbumID(albumId);
+    return this.favsService.deleteAlbumFromFavorites(albumId);
+  }
+
   @Post('track/:id')
   favoriteTrack(@Param('id') trackId: string) {
     try {
@@ -97,5 +110,11 @@ export class FavsController {
         throw err;
       }
     }
+  }
+
+  @Delete('track/:id')
+  deleteTrack(@Param('id') trackId: string) {
+    this.trackService.validateTrackId(trackId);
+    return this.favsService.deleteTrackFromFavorites(trackId);
   }
 }
