@@ -18,7 +18,12 @@ export class UserService {
   }
 
   createNew(passedLogin: string, passedPassword: string) {
-    if (passedLogin === undefined || passedPassword === undefined) {
+    if (
+      passedLogin === undefined ||
+      passedPassword === undefined ||
+      typeof passedLogin !== 'string' ||
+      typeof passedPassword !== 'string'
+    ) {
       throw new BadRequestException('User is missing required fields');
     }
     const userId = v4();
@@ -50,7 +55,12 @@ export class UserService {
   }
 
   updateUser(id: string, oldPassword: string, newPassword: string) {
-    if (oldPassword === undefined || newPassword === undefined) {
+    if (
+      oldPassword === undefined ||
+      newPassword === undefined ||
+      typeof oldPassword !== 'string' ||
+      typeof newPassword !== 'string'
+    ) {
       throw new BadRequestException('User is missing required fields');
     }
     const user = recordFinder('User', id, this.users) as User;
