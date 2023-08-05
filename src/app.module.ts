@@ -15,6 +15,7 @@ import { TrackModule } from './track/track.module';
 import { FavsController } from './favs/favs.controller';
 import { FavsService } from './favs/favs.service';
 import { FavsModule } from './favs/favs.module';
+import { PrismaModule } from './prisma/prisma.module';
 
 @Module({
   imports: [
@@ -24,6 +25,7 @@ import { FavsModule } from './favs/favs.module';
     AlbumModule,
     TrackModule,
     FavsModule,
+    PrismaModule,
   ],
   controllers: [
     AppController,
