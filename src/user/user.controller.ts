@@ -23,8 +23,7 @@ export class UserController {
   //   return this.userService.createNew(userLogin, userPassword);
   // }
   createNewUser(@Body() dto: UserDto) {
-    console.log(dto);
-    // return this.userService.createNew(userLogin, userPassword);
+    return this.userService.createNew(dto.login, dto.password);
   }
 
   @Get()
