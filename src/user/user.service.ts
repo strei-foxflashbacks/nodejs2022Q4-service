@@ -4,6 +4,7 @@ import {
   Injectable,
 } from '@nestjs/common';
 import { User } from './user.model';
+// import { User } from '@prisma/client';
 import { v4 } from 'uuid';
 import recordFinder from 'src/utils/recordFinder';
 
