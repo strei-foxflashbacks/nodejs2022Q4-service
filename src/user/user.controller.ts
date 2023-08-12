@@ -9,17 +9,22 @@ import {
   Put,
 } from '@nestjs/common';
 import { UserService } from './user.service';
+import { UserDto } from './dto';
 
 @Controller('user')
 export class UserController {
   constructor(private readonly userService: UserService) {}
 
   @Post()
-  createNewUser(
-    @Body('login') userLogin: string,
-    @Body('password') userPassword: string,
-  ) {
-    return this.userService.createNew(userLogin, userPassword);
+  // createNewUser(
+  //   @Body('login') userLogin: string,
+  //   @Body('password') userPassword: string,
+  // ) {
+  //   return this.userService.createNew(userLogin, userPassword);
+  // }
+  createNewUser(@Body() dto: UserDto) {
+    console.log(dto);
+    // return this.userService.createNew(userLogin, userPassword);
   }
 
   @Get()
