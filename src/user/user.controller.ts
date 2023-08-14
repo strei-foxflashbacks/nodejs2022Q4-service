@@ -22,19 +22,19 @@ export class UserController {
   // ) {
   //   return this.userService.createNew(userLogin, userPassword);
   // }
-  createNewUser(@Body() dto: UserDto) {
+  async createNewUser(@Body() dto: UserDto) {
     // return this.userService.createNew(dto.login, dto.password);
-    return this.userService.signUp(dto);
+    return await this.userService.signUp(dto);
   }
 
   @Get()
-  getAllUsers() {
-    return this.userService.getUsers();
+  async getAllUsers() {
+    return await this.userService.getUsers();
   }
 
   @Get(':id')
-  getUser(@Param('id') userId: string) {
-    return this.userService.getUserById(userId);
+  async getUser(@Param('id') userId: string) {
+    return await this.userService.getUserById(userId);
   }
 
   @Put(':id')
@@ -48,7 +48,7 @@ export class UserController {
 
   @Delete(':id')
   @HttpCode(204)
-  deleteUser(@Param('id') userId: string) {
-    this.userService.deleteUser(userId);
+  async deleteUser(@Param('id') userId: string) {
+    await this.userService.deleteUser(userId);
   }
 }
