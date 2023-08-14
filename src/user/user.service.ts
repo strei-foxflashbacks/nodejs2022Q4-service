@@ -64,7 +64,15 @@ export class UserService {
 
   async getUsers() {
     // const output = this.users.map((user) => this.excludePassword(user));
-    const output = await this.prisma.user.findMany();
+    const output = await this.prisma.user.findMany({
+      select: {
+        id: true,
+        login: true,
+        version: true,
+        createdAt: true,
+        updatedAt: true,
+      },
+    });
     return output;
   }
 
