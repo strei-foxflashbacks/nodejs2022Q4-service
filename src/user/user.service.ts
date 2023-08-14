@@ -7,7 +7,7 @@ import { User } from './user.model';
 // import { User } from '@prisma/client';
 import { UserDto } from './dto';
 import { PrismaService } from 'src/prisma/prisma.service';
-import { v4 } from 'uuid';
+// import { v4 } from 'uuid';
 import recordFinder from 'src/utils/recordFinder';
 
 @Injectable()
@@ -38,32 +38,33 @@ export class UserService {
     return user;
   }
 
-  createNew(passedLogin: string, passedPassword: string) {
-    if (passedLogin === undefined || passedPassword === undefined) {
-      throw new BadRequestException('User is missing required fields');
-    }
-    if (typeof passedLogin !== 'string' || typeof passedPassword !== 'string') {
-      throw new BadRequestException('Invalid input');
-    }
-    const userId = v4();
-    const version = 1;
-    const createdAt = Date.now();
-    const updatedAt = createdAt;
-    const newUser = new User(
-      userId,
-      passedLogin,
-      passedPassword,
-      version,
-      createdAt,
-      updatedAt,
-    );
-    this.users.push(newUser);
-    const output = this.excludePassword(newUser);
-    return output;
-  }
+  // createNew(passedLogin: string, passedPassword: string) {
+  //   if (passedLogin === undefined || passedPassword === undefined) {
+  //     throw new BadRequestException('User is missing required fields');
+  //   }
+  //   if (typeof passedLogin !== 'string' || typeof passedPassword !== 'string') {
+  //     throw new BadRequestException('Invalid input');
+  //   }
+  //   const userId = v4();
+  //   const version = 1;
+  //   const createdAt = Date.now();
+  //   const updatedAt = createdAt;
+  //   const newUser = new User(
+  //     userId,
+  //     passedLogin,
+  //     passedPassword,
+  //     version,
+  //     createdAt,
+  //     updatedAt,
+  //   );
+  //   this.users.push(newUser);
+  //   const output = this.excludePassword(newUser);
+  //   return output;
+  // }
 
-  getUsers() {
-    const output = this.users.map((user) => this.excludePassword(user));
+  async getUsers() {
+    // const output = this.users.map((user) => this.excludePassword(user));
+    const output = await this.prisma.user.findMany();
     return output;
   }
 
