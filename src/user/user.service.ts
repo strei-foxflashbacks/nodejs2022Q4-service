@@ -2,77 +2,102 @@ import {
   BadRequestException,
   ForbiddenException,
   Injectable,
+  NotFoundException,
 } from '@nestjs/common';
-import { User } from './user.model';
-import { v4 } from 'uuid';
-import recordFinder from 'src/utils/recordFinder';
+import { UserDto } from './dto';
+import { PrismaService } from 'src/prisma/prisma.service';
+import { isUUID } from 'class-validator';
 
 @Injectable()
 export class UserService {
-  private users: User[] = [];
+  constructor(private prisma: PrismaService) {}
 
-  private excludePassword(user: User) {
-    return Object.fromEntries(
-      Object.entries(user).filter((key) => key[0] !== 'password'),
-    );
+  async signUp(dto: UserDto) {
+    const user = this.prisma.user.create({
+      data: {
+        login: dto.login,
+        password: dto.password,
+      },
+      select: {
+        id: true,
+        login: true,
+        version: true,
+        createdAt: true,
+        updatedAt: true,
+      },
+    });
+    return user;
   }
 
-  createNew(passedLogin: string, passedPassword: string) {
-    if (passedLogin === undefined || passedPassword === undefined) {
-      throw new BadRequestException('User is missing required fields');
-    }
-    if (typeof passedLogin !== 'string' || typeof passedPassword !== 'string') {
-      throw new BadRequestException('Invalid input');
-    }
-    const userId = v4();
-    const version = 1;
-    const createdAt = Date.now();
-    const updatedAt = createdAt;
-    const newUser = new User(
-      userId,
-      passedLogin,
-      passedPassword,
-      version,
-      createdAt,
-      updatedAt,
-    );
-    this.users.push(newUser);
-    const output = this.excludePassword(newUser);
+  async getUsers() {
+    const output = await this.prisma.user.findMany({
+      select: {
+        id: true,
+        login: true,
+        version: true,
+        createdAt: true,
+        updatedAt: true,
+      },
+    });
     return output;
   }
 
-  getUsers() {
-    const output = this.users.map((user) => this.excludePassword(user));
-    return output;
+  async getUserById(id: string) {
+    if (!isUUID(id))
+      throw new BadRequestException('User id is invalid (or not UUID)');
+    const user = await this.prisma.user.findUnique({
+      where: {
+        id: id,
+      },
+      select: {
+        id: true,
+        login: true,
+        version: true,
+        createdAt: true,
+        updatedAt: true,
+      },
+    });
+    if (!user) {
+      throw new NotFoundException('User not found');
+    }
+    return user;
   }
 
-  getUserById(id: string) {
-    const user = recordFinder('User', id, this.users) as User;
-    const output = this.excludePassword(user);
-    return output;
-  }
-
-  updateUser(id: string, oldPassword: string, newPassword: string) {
-    if (oldPassword === undefined || newPassword === undefined) {
-      throw new BadRequestException('User is missing required fields');
-    }
-    if (typeof oldPassword !== 'string' || typeof newPassword !== 'string') {
-      throw new BadRequestException('Invalid input');
-    }
-    const user = recordFinder('User', id, this.users) as User;
-    if (oldPassword !== user.password) {
+  async updateUser(id: string, oldPassword: string, newPassword: string) {
+    await this.getUserById(id);
+    const user = await this.prisma.user.findUnique({
+      where: {
+        id: id,
+      },
+    });
+    if (user.password !== oldPassword) {
       throw new ForbiddenException('Old password is incorrect');
     }
-    user.password = newPassword;
-    user.version++;
-    user.updatedAt = Date.now();
-    const output = this.excludePassword(user);
-    return output;
+    const updatedUser = await this.prisma.user.update({
+      where: {
+        id: id,
+      },
+      data: {
+        password: newPassword,
+        version: user.version + 1,
+      },
+      select: {
+        id: true,
+        login: true,
+        version: true,
+        createdAt: true,
+        updatedAt: true,
+      },
+    });
+    return updatedUser;
   }
 
-  deleteUser(id: string) {
-    recordFinder('User', id, this.users) as User;
-    const index = this.users.findIndex((record) => record.id === id);
-    this.users.splice(index, 1);
+  async deleteUser(id: string) {
+    await this.getUserById(id);
+    await this.prisma.user.delete({
+      where: {
+        id: id,
+      },
+    });
   }
 }
