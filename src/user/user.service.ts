@@ -68,10 +68,22 @@ export class UserService {
     return output;
   }
 
-  getUserById(id: string) {
-    const user = recordFinder('User', id, this.users) as User;
-    const output = this.excludePassword(user);
-    return output;
+  async getUserById(id: string) {
+    // const user = recordFinder('User', id, this.users) as User;
+    const user = await this.prisma.user.findUnique({
+      where: {
+        id: id,
+      },
+      select: {
+        id: true,
+        login: true,
+        version: true,
+        createdAt: true,
+        updatedAt: true,
+      },
+    });
+    // const output = this.excludePassword(user);
+    return user;
   }
 
   updateUser(id: string, oldPassword: string, newPassword: string) {
