@@ -5,17 +5,37 @@ import {
 } from '@nestjs/common';
 import { User } from './user.model';
 // import { User } from '@prisma/client';
+import { UserDto } from './dto';
+import { PrismaService } from 'src/prisma/prisma.service';
 import { v4 } from 'uuid';
 import recordFinder from 'src/utils/recordFinder';
 
 @Injectable()
 export class UserService {
+  constructor(private prisma: PrismaService) {}
   private users: User[] = [];
 
   private excludePassword(user: User) {
     return Object.fromEntries(
       Object.entries(user).filter((key) => key[0] !== 'password'),
     );
+  }
+
+  async signUp(dto: UserDto) {
+    const user = this.prisma.user.create({
+      data: {
+        login: dto.login,
+        password: dto.password,
+      },
+      select: {
+        id: true,
+        login: true,
+        version: true,
+        createdAt: true,
+        updatedAt: true,
+      },
+    });
+    return user;
   }
 
   createNew(passedLogin: string, passedPassword: string) {
