@@ -2,6 +2,7 @@ import {
   BadRequestException,
   ForbiddenException,
   Injectable,
+  NotFoundException,
 } from '@nestjs/common';
 import { User } from './user.model';
 // import { User } from '@prisma/client';
@@ -9,6 +10,7 @@ import { UserDto } from './dto';
 import { PrismaService } from 'src/prisma/prisma.service';
 // import { v4 } from 'uuid';
 import recordFinder from 'src/utils/recordFinder';
+import { isUUID } from 'class-validator';
 
 @Injectable()
 export class UserService {
@@ -78,6 +80,8 @@ export class UserService {
 
   async getUserById(id: string) {
     // const user = recordFinder('User', id, this.users) as User;
+    if (!isUUID(id))
+      throw new BadRequestException('User id is invalid (or not UUID)');
     const user = await this.prisma.user.findUnique({
       where: {
         id: id,
@@ -90,6 +94,9 @@ export class UserService {
         updatedAt: true,
       },
     });
+    if (!user) {
+      throw new NotFoundException('User not found');
+    }
     // const output = this.excludePassword(user);
     return user;
   }
