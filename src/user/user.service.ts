@@ -120,22 +120,12 @@ export class UserService {
   }
 
   async deleteUser(id: string) {
-    if (!isUUID(id))
-      throw new BadRequestException('User id is invalid (or not UUID)');
-    const user = await this.prisma.user.findUnique({
-      where: {
-        id: id,
-      },
-    });
-    if (!user) {
-      throw new NotFoundException('User not found');
-    }
+    await this.getUserById(id);
     await this.prisma.user.delete({
       where: {
         id: id,
       },
     });
-    return { message: 'User deleted successfully' };
     // recordFinder('User', id, this.users) as User;
     // const index = this.users.findIndex((record) => record.id === id);
     // this.users.splice(index, 1);
