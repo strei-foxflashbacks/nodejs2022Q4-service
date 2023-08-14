@@ -9,7 +9,7 @@ import { User } from './user.model';
 import { UserDto } from './dto';
 import { PrismaService } from 'src/prisma/prisma.service';
 // import { v4 } from 'uuid';
-import recordFinder from 'src/utils/recordFinder';
+// import recordFinder from 'src/utils/recordFinder';
 import { isUUID } from 'class-validator';
 
 @Injectable()
@@ -101,22 +101,47 @@ export class UserService {
     return user;
   }
 
-  updateUser(id: string, oldPassword: string, newPassword: string) {
-    if (oldPassword === undefined || newPassword === undefined) {
-      throw new BadRequestException('User is missing required fields');
-    }
-    if (typeof oldPassword !== 'string' || typeof newPassword !== 'string') {
-      throw new BadRequestException('Invalid input');
-    }
-    const user = recordFinder('User', id, this.users) as User;
-    if (oldPassword !== user.password) {
+  async updateUser(id: string, oldPassword: string, newPassword: string) {
+    const user = await this.prisma.user.findUnique({
+      where: {
+        id: id,
+      },
+    });
+    if (user.password !== oldPassword) {
       throw new ForbiddenException('Old password is incorrect');
     }
-    user.password = newPassword;
-    user.version++;
-    user.updatedAt = Date.now();
-    const output = this.excludePassword(user);
-    return output;
+    const updatedUser = await this.prisma.user.update({
+      where: {
+        id: id,
+      },
+      data: {
+        password: newPassword,
+        version: user.version + 1,
+      },
+      select: {
+        id: true,
+        login: true,
+        version: true,
+        createdAt: true,
+        updatedAt: true,
+      },
+    });
+    return updatedUser;
+    // if (oldPassword === undefined || newPassword === undefined) {
+    //   throw new BadRequestException('User is missing required fields');
+    // }
+    // if (typeof oldPassword !== 'string' || typeof newPassword !== 'string') {
+    //   throw new BadRequestException('Invalid input');
+    // }
+    // const user = recordFinder('User', id, this.users) as User;
+    // if (oldPassword !== user.password) {
+    //   throw new ForbiddenException('Old password is incorrect');
+    // }
+    // user.password = newPassword;
+    // user.version++;
+    // user.updatedAt = Date.now();
+    // const output = this.excludePassword(user);
+    // return output;
   }
 
   async deleteUser(id: string) {
