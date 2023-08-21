@@ -31,13 +31,13 @@ export class UserService {
     const newUser = new User(
       userId,
       passedLogin,
-      passedPassword,
       version,
       createdAt,
       updatedAt,
+      passedPassword,
     );
     this.users.push(newUser);
-    const output = this.excludePassword(newUser);
+    const output = this.excludePassword(newUser) as User;
     return output;
   }
 
@@ -52,7 +52,12 @@ export class UserService {
     return output;
   }
 
-  updateUser(id: string, oldPassword: string, newPassword: string) {
+  updateUser(
+    id: string,
+    oldPassword?: string,
+    newPassword?: string,
+    refreshHash?: string,
+  ) {
     if (oldPassword === undefined || newPassword === undefined) {
       throw new BadRequestException('User is missing required fields');
     }
@@ -65,8 +70,9 @@ export class UserService {
     }
     user.password = newPassword;
     user.version++;
+    user.refreshHash = refreshHash;
     user.updatedAt = Date.now();
-    const output = this.excludePassword(user);
+    const output = this.excludePassword(user) as User;
     return output;
   }
 
