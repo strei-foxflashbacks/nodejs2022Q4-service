@@ -52,12 +52,7 @@ export class UserService {
     return output;
   }
 
-  updateUser(
-    id: string,
-    oldPassword?: string,
-    newPassword?: string,
-    refreshHash?: string,
-  ) {
+  updateUser(id: string, oldPassword: string, newPassword: string) {
     if (oldPassword === undefined || newPassword === undefined) {
       throw new BadRequestException('User is missing required fields');
     }
@@ -65,12 +60,11 @@ export class UserService {
       throw new BadRequestException('Invalid input');
     }
     const user = recordFinder('User', id, this.users) as User;
-    if (oldPassword !== user.password) {
+    if (oldPassword && oldPassword !== user.password) {
       throw new ForbiddenException('Old password is incorrect');
     }
     user.password = newPassword;
     user.version++;
-    user.refreshHash = refreshHash;
     user.updatedAt = Date.now();
     const output = this.excludePassword(user) as User;
     return output;

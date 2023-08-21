@@ -1,5 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
+import { RefreshDto } from 'src/strategies/refresh.model';
 import { Tokens } from 'src/types';
 import { UserDto } from 'src/user/dto';
 import { UserService } from 'src/user/user.service';
@@ -11,6 +12,7 @@ export class AuthService {
     private readonly userService: UserService,
     private jwtService: JwtService,
   ) {}
+  private refreshHashes: RefreshDto[] = [];
 
   private async getTokens(userId: string, email: string) {
     const [acessToken, refreshToken] = await Promise.all([
@@ -46,6 +48,7 @@ export class AuthService {
     const hash = await hashData(dto.password);
     const newUser = this.userService.createNew(dto.login, hash);
     const tokens = await this.getTokens(newUser.id, newUser.login);
+    await this.updateRefreshHash(newUser.id, tokens.refresh_token);
     return tokens;
   }
 
@@ -63,6 +66,11 @@ export class AuthService {
 
   async updateRefreshHash(userId: string, refreshToken: string) {
     const hash = await hashData(refreshToken);
-    this.userService.updateUser(userId, hash);
+    const existingUser = this.refreshHashes.find(
+      (user) => (user.userId = userId),
+    );
+    if (existingUser) {
+      existingUser.refreshHash = hash;
+    }
   }
 }
