@@ -17,8 +17,8 @@ export class AuthController {
   }
 
   @Post('signin')
-  signin() {
-    this.authService.signin();
+  async signin(@Body() dto: UserDto): Promise<Tokens> {
+    return await this.authService.signin(dto);
   }
 
   @Post('logout')

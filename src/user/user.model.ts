@@ -6,6 +6,5 @@ export class User {
     public createdAt: number,
     public updatedAt: number,
     public password?: string,
-    public refreshHash?: string,
   ) {}
 }

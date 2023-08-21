@@ -1,10 +1,11 @@
-import { Injectable } from '@nestjs/common';
+import { ForbiddenException, Injectable } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 import { RefreshDto } from 'src/strategies/refresh.model';
 import { Tokens } from 'src/types';
 import { UserDto } from 'src/user/dto';
 import { UserService } from 'src/user/user.service';
 import hashData from 'src/utils/hashData';
+import * as bcrypt from 'bcrypt';
 
 @Injectable()
 export class AuthService {
@@ -52,8 +53,21 @@ export class AuthService {
     return tokens;
   }
 
-  signin() {
-    console.log('signin');
+  async signin(dto: UserDto): Promise<Tokens> {
+    const existingUser = this.userService.getUserByLogin(dto.login);
+    if (!existingUser) {
+      throw new ForbiddenException('Invalid credentials');
+    }
+    const passwordMatch = await bcrypt.compare(
+      dto.password,
+      existingUser.password,
+    );
+    if (!passwordMatch) {
+      throw new ForbiddenException('Invalid credentials');
+    }
+    const tokens = await this.getTokens(existingUser.id, existingUser.login);
+    await this.updateRefreshHash(existingUser.id, tokens.refresh_token);
+    return tokens;
   }
 
   logout() {

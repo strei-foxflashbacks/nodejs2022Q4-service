@@ -52,6 +52,11 @@ export class UserService {
     return output;
   }
 
+  getUserByLogin(login: string) {
+    const existingUser = this.users.find((user) => user.login === login);
+    return existingUser;
+  }
+
   updateUser(id: string, oldPassword: string, newPassword: string) {
     if (oldPassword === undefined || newPassword === undefined) {
       throw new BadRequestException('User is missing required fields');
