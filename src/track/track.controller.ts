@@ -7,11 +7,13 @@ import {
   Param,
   Post,
   Put,
+  UseGuards,
 } from '@nestjs/common';
 import { TrackService } from './track.service';
 import { ArtistService } from 'src/artist/artist.service';
 import { AlbumService } from 'src/album/album.service';
 import { FavsService } from 'src/favs/favs.service';
+import { AuthGuard } from '@nestjs/passport';
 
 @Controller('track')
 export class TrackController {
@@ -22,6 +24,7 @@ export class TrackController {
     private readonly favsService: FavsService,
   ) {}
 
+  @UseGuards(AuthGuard('jwt-access'))
   @Post()
   addTrack(
     @Body('name') trackName: string,
@@ -44,16 +47,19 @@ export class TrackController {
     return newTrack;
   }
 
+  @UseGuards(AuthGuard('jwt-access'))
   @Get()
   getTracks() {
     return this.trackService.getTracks();
   }
 
+  @UseGuards(AuthGuard('jwt-access'))
   @Get(':id')
   getTrack(@Param('id') trackId: string) {
     return this.trackService.getTrackById(trackId);
   }
 
+  @UseGuards(AuthGuard('jwt-access'))
   @Put(':id')
   updateTheTrack(
     @Param('id') trackId: string,
@@ -77,6 +83,7 @@ export class TrackController {
     );
   }
 
+  @UseGuards(AuthGuard('jwt-access'))
   @Delete(':id')
   @HttpCode(204)
   deleteTheTrack(@Param('id') trackId: string) {
