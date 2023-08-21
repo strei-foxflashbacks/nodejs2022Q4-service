@@ -1,6 +1,6 @@
 import { ForbiddenException, Injectable } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
-import { RefreshDto } from 'src/strategies/refresh.model';
+import { JWTPayload } from 'src/strategies/payload.model';
 import { Tokens } from 'src/types';
 import { UserDto } from 'src/user/dto';
 import { UserService } from 'src/user/user.service';
@@ -13,7 +13,7 @@ export class AuthService {
     private readonly userService: UserService,
     private jwtService: JwtService,
   ) {}
-  private refreshHashes: RefreshDto[] = [];
+  private refreshHashes: JWTPayload[] = [];
 
   private async getTokens(userId: string, email: string) {
     const [acessToken, refreshToken] = await Promise.all([
@@ -70,8 +70,11 @@ export class AuthService {
     return tokens;
   }
 
-  logout() {
-    console.log('logout');
+  logout(userId: string) {
+    const loggedOutUser = this.refreshHashes.find(
+      (user) => (user.userId = userId),
+    );
+    loggedOutUser.refreshHash = null;
   }
 
   refresh() {
@@ -85,6 +88,12 @@ export class AuthService {
     );
     if (existingUser) {
       existingUser.refreshHash = hash;
+    } else {
+      const userPayload = {
+        userId,
+        refreshHash: hash,
+      };
+      this.refreshHashes.push(userPayload);
     }
   }
 }
