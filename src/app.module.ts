@@ -15,6 +15,10 @@ import { TrackModule } from './track/track.module';
 import { FavsController } from './favs/favs.controller';
 import { FavsService } from './favs/favs.service';
 import { FavsModule } from './favs/favs.module';
+import { UserService } from './user/user.service';
+import { UserController } from './user/user.controller';
+import { AuthService } from './auth/auth.service';
+import { AuthController } from './auth/auth.controller';
 
 @Module({
   imports: [
@@ -31,6 +35,8 @@ import { FavsModule } from './favs/favs.module';
     AlbumController,
     TrackController,
     FavsController,
+    UserController,
+    AuthController,
   ],
   providers: [
     AppService,
@@ -38,6 +44,8 @@ import { FavsModule } from './favs/favs.module';
     AlbumService,
     TrackService,
     FavsService,
+    UserService,
+    AuthService,
   ],
 })
 export class AppModule {}
