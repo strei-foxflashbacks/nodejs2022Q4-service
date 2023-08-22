@@ -8,6 +8,7 @@ import {
   Get,
   Delete,
   HttpCode,
+  UseGuards,
 } from '@nestjs/common';
 import { FavsService } from './favs.service';
 import { TrackService } from 'src/track/track.service';
@@ -17,6 +18,7 @@ import { FavoritesResponse } from './favs.model';
 import { Artist } from 'src/artist/artist.model';
 import { Album } from 'src/album/album.model';
 import { Track } from 'src/track/track.model';
+import { AuthGuard } from '@nestjs/passport';
 
 @Controller('favs')
 export class FavsController {
@@ -27,6 +29,7 @@ export class FavsController {
     private readonly albumService: AlbumService,
   ) {}
 
+  @UseGuards(AuthGuard('jwt-access'))
   @Get()
   getFavorites() {
     const ids = this.favsService.getFavoritesIds();
@@ -44,6 +47,7 @@ export class FavsController {
     return response;
   }
 
+  @UseGuards(AuthGuard('jwt-access'))
   @Post('artist/:id')
   favoriteArtist(@Param('id') artistId: string) {
     try {
@@ -63,6 +67,7 @@ export class FavsController {
     }
   }
 
+  @UseGuards(AuthGuard('jwt-access'))
   @Delete('artist/:id')
   @HttpCode(204)
   deleteArtist(@Param('id') artistId: string) {
@@ -70,6 +75,7 @@ export class FavsController {
     return this.favsService.deleteArtistFromFavorites(artistId);
   }
 
+  @UseGuards(AuthGuard('jwt-access'))
   @Post('album/:id')
   favoriteAlbum(@Param('id') albumId: string) {
     try {
@@ -89,6 +95,7 @@ export class FavsController {
     }
   }
 
+  @UseGuards(AuthGuard('jwt-access'))
   @Delete('album/:id')
   @HttpCode(204)
   deleteAlbum(@Param('id') albumId: string) {
@@ -96,6 +103,7 @@ export class FavsController {
     return this.favsService.deleteAlbumFromFavorites(albumId);
   }
 
+  @UseGuards(AuthGuard('jwt-access'))
   @Post('track/:id')
   favoriteTrack(@Param('id') trackId: string) {
     try {
@@ -115,6 +123,7 @@ export class FavsController {
     }
   }
 
+  @UseGuards(AuthGuard('jwt-access'))
   @Delete('track/:id')
   @HttpCode(204)
   deleteTrack(@Param('id') trackId: string) {

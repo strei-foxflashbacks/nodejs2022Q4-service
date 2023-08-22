@@ -7,11 +7,13 @@ import {
   Put,
   Delete,
   HttpCode,
+  UseGuards,
 } from '@nestjs/common';
 import { ArtistService } from './artist.service';
 import { AlbumService } from 'src/album/album.service';
 import { TrackService } from 'src/track/track.service';
 import { FavsService } from 'src/favs/favs.service';
+import { AuthGuard } from '@nestjs/passport';
 
 @Controller('artist')
 export class ArtistController {
@@ -22,6 +24,7 @@ export class ArtistController {
     private readonly favsService: FavsService,
   ) {}
 
+  @UseGuards(AuthGuard('jwt-access'))
   @Post()
   addArtist(
     @Body('name') artistName: string,
@@ -31,16 +34,19 @@ export class ArtistController {
     return newArtist;
   }
 
+  @UseGuards(AuthGuard('jwt-access'))
   @Get()
   getArtists() {
     return this.artistService.getArtists();
   }
 
+  @UseGuards(AuthGuard('jwt-access'))
   @Get(':id')
   getTheArtist(@Param('id') artistId: string) {
     return this.artistService.getArtistById(artistId);
   }
 
+  @UseGuards(AuthGuard('jwt-access'))
   @Put(':id')
   updateTheArtist(
     @Param('id') artistId: string,
@@ -50,6 +56,7 @@ export class ArtistController {
     return this.artistService.updateArtistById(artistId, artistName, hasGrammy);
   }
 
+  @UseGuards(AuthGuard('jwt-access'))
   @Delete(':id')
   @HttpCode(204)
   deleteTheArtist(@Param('id') artistId: string) {
